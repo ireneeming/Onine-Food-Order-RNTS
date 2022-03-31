@@ -3,18 +3,22 @@ import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 
 import * as Location from "expo-location";
 
+import { useNavigation } from "../utils";
+
 const screenWidth = Dimensions.get("screen").width;
 
 export const LandingScreen = () => {
-  const { body } = styles;
+  const { navigate } = useNavigation();
 
   const [errMsg, setErrorMsg] = useState("");
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
 
-  const [displayAddress, setDisplayAddress] = useState("");
+  const [displayAddress, setDisplayAddress] = useState(
+    "Waiting for Current Location"
+  );
 
   useEffect(() => {
-    async () => {
+    (async () => {
       let { status } = await Location.requestBackgroundPermissionsAsync();
 
       if (status !== "granted") {
@@ -23,21 +27,32 @@ export const LandingScreen = () => {
       let location = await Location.getCurrentPositionAsync({});
 
       const { coords } = location;
+
       if (coords) {
         const { latitude, longitude } = coords;
+
         let addressResponse: any = await Location.reverseGeocodeAsync({
           latitude,
           longitude,
         });
+
         for (let item of addressResponse) {
           setAddress(item);
-          let currentAddress = `${item.name}, ${item.street},${item.postalCode},${item.country}`;
+
+          let currentAddress = `${item.name},${item.street}, ${item.postalCode}, ${item.country}`;
           setDisplayAddress(currentAddress);
+
+          if (currentAddress.length > 0) {
+            setTimeout(() => {
+              navigate("homeStack");
+            }, 2000);
+          }
+
           return;
         }
       }
-    };
-  });
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -46,7 +61,7 @@ export const LandingScreen = () => {
       </View>
 
       {/* body */}
-      <View style={body}>
+      <View style={styles.body}>
         <Image
           source={require("../images/delivery_icon.png")}
           style={styles.deliveryIcon}
