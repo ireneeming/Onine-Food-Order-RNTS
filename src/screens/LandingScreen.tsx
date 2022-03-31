@@ -8,7 +8,7 @@ import { useNavigation } from "../utils";
 const screenWidth = Dimensions.get("screen").width;
 
 export const LandingScreen = () => {
-  //const { navigate } = useNavigation();
+  const { navigate } = useNavigation();
 
   const [errMsg, setErrorMsg] = useState("");
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
@@ -19,12 +19,13 @@ export const LandingScreen = () => {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestBackgroundPermissionsAsync();
+      let { status } = await Location.requestPermissionsAsync();
 
       if (status !== "granted") {
         setErrorMsg("Permission to access location is not granted");
       }
-      let location = await Location.getCurrentPositionAsync({});
+
+      let location: any = await Location.getCurrentPositionAsync({});
 
       const { coords } = location;
 
@@ -38,29 +39,28 @@ export const LandingScreen = () => {
 
         for (let item of addressResponse) {
           setAddress(item);
-
+          //onUpdateLocation(item)
           let currentAddress = `${item.name},${item.street}, ${item.postalCode}, ${item.country}`;
           setDisplayAddress(currentAddress);
 
-          // if (currentAddress.length > 0) {
-          //   setTimeout(() => {
-          //     navigate("homeStack");
-          //   }, 2000);
-          // }
+          if (currentAddress.length > 0) {
+            setTimeout(() => {
+              navigate("homeStack");
+            }, 2000);
+          }
 
           return;
         }
+      } else {
+        //notify user something went wrong with location
       }
     })();
   }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.navigation}>
-        <Text>navigation</Text>
-      </View>
+      <View style={styles.navigation} />
 
-      {/* body */}
       <View style={styles.body}>
         <Image
           source={require("../images/delivery_icon.png")}
@@ -69,12 +69,9 @@ export const LandingScreen = () => {
         <View style={styles.addressContainer}>
           <Text style={styles.addressTitle}>Your Delivery Address</Text>
         </View>
-        <Text style={styles.addressText}>Waiting for Current Location</Text>
+        <Text style={styles.addressText}> {displayAddress}</Text>
       </View>
-
-      <View style={styles.footer}>
-        <Text>footer</Text>
-      </View>
+      <View style={styles.footer} />
     </View>
   );
 };
