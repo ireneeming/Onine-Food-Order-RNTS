@@ -8,7 +8,7 @@ import { useNavigation } from "../utils";
 const screenWidth = Dimensions.get("screen").width;
 
 export const LandingScreen = () => {
-  const { navigate } = useNavigation();
+  //const { navigate } = useNavigation();
 
   const [errMsg, setErrorMsg] = useState("");
   const [address, setAddress] = useState<Location.LocationGeocodedAddress>();
@@ -42,11 +42,11 @@ export const LandingScreen = () => {
           let currentAddress = `${item.name},${item.street}, ${item.postalCode}, ${item.country}`;
           setDisplayAddress(currentAddress);
 
-          if (currentAddress.length > 0) {
-            setTimeout(() => {
-              navigate("homeStack");
-            }, 2000);
-          }
+          // if (currentAddress.length > 0) {
+          //   setTimeout(() => {
+          //     navigate("homeStack");
+          //   }, 2000);
+          // }
 
           return;
         }

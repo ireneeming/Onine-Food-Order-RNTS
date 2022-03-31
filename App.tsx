@@ -8,19 +8,19 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
 const switchNavigator = createSwitchNavigator({
-  landingStack: {
-    screen: createStackNavigator(
-      {
-        Landing: LandingScreen,
-        //search address screen
-      },
-      {
-        defaultNavigationOptions: {
-          headerShown: false,
-        },
-      }
-    ),
-  },
+  // landingStack: {
+  //   screen: createStackNavigator(
+  //     {
+  //       Landing: LandingScreen,
+  //       //search address screen
+  //     },
+  //     {
+  //       defaultNavigationOptions: {
+  //         headerShown: false,
+  //       },
+  //     }
+  //   ),
+  // },
   homeStack: createBottomTabNavigator({
     home: {
       screen: createStackNavigator({
@@ -37,11 +37,58 @@ const switchNavigator = createSwitchNavigator({
         },
       },
     },
+    Offer: {
+      screen: createStackNavigator({
+        OfferPage: HomeScreen,
+        //search address screen
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused, tintColor }) => {
+          let icon =
+            focused == true
+              ? require("./src/images/offer_icon.png")
+              : require("./src/images/offer_n_icon.png");
+          return <Image source={icon} style={styles.tabIcon} />;
+        },
+      },
+    },
+    Cart: {
+      screen: createStackNavigator({
+        CartPage: HomeScreen,
+        //search address screen
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused, tintColor }) => {
+          let icon =
+            focused == true
+              ? require("./src/images/cart_icon.png")
+              : require("./src/images/cart_n_icon.png");
+          return <Image source={icon} style={styles.tabIcon} />;
+        },
+      },
+    },
+    Account: {
+      screen: createStackNavigator({
+        AccountPage: HomeScreen,
+        //search address screen
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused, tintColor }) => {
+          let icon =
+            focused == true
+              ? require("./src/images/account_icon.png")
+              : require("./src/images/account_n_icon.png");
+          return <Image source={icon} style={styles.tabIcon} />;
+        },
+      },
+    },
   }),
 });
 
+const AppNavigation = createAppContainer(switchNavigator);
+
 export default function App() {
-  return <LandingScreen />;
+  return <AppNavigation />;
 }
 
 const styles = StyleSheet.create({
